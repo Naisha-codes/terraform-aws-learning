@@ -8,15 +8,65 @@ terraform {
 }
 
 provider "aws" {
-  region = var.region
+  region = "ap-south-1"
 }
 
-resource "aws_security_group" "ssh_access" {
-  name        = "terraform-ssh-access"
-  description = "Allow SSH access"
+# VPC
+resource "aws_vpc" "main" {
+  cidr_block = "10.0.0.0/16"
+
+  tags = {
+    Name = "terraform-vpc-demo"
+  }
+}
+
+# Internet Gateway
+resource "aws_internet_gateway" "igw" {
+  vpc_id = aws_vpc.main.id
+
+  tags = {
+    Name = "terraform-igw"
+  }
+}
+
+# Public Subnet
+resource "aws_subnet" "public" {
+  vpc_id                  = aws_vpc.main.id
+  cidr_block              = "10.0.1.0/24"
+  availability_zone       = "ap-south-1a"
+  map_public_ip_on_launch = true
+
+  tags = {
+    Name = "terraform-public-subnet"
+  }
+}
+
+# Route Table
+resource "aws_route_table" "public_rt" {
+  vpc_id = aws_vpc.main.id
+
+  route {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = aws_internet_gateway.igw.id
+  }
+
+  tags = {
+    Name = "terraform-public-rt"
+  }
+}
+
+# Route Table Association
+resource "aws_route_table_association" "public_assoc" {
+  subnet_id      = aws_subnet.public.id
+  route_table_id = aws_route_table.public_rt.id
+}
+
+# Security Group (SSH)
+resource "aws_security_group" "ssh_sg" {
+  name   = "terraform-ssh-sg"
+  vpc_id = aws_vpc.main.id
 
   ingress {
-    description = "SSH from anywhere"
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
@@ -29,16 +79,22 @@ resource "aws_security_group" "ssh_access" {
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
-}
-
-resource "aws_instance" "example" {
-  ami           = var.ami_id
-  instance_type = var.instance_type
-
-  vpc_security_group_ids = [aws_security_group.ssh_access.id]
 
   tags = {
-    Name = var.instance_name
+    Name = "terraform-ssh-sg"
+  }
+}
+
+# EC2 Instance
+resource "aws_instance" "web" {
+  ami                         = "ami-0f5ee92e2d63afc18"
+  instance_type               = "t2.micro"
+  subnet_id                   = aws_subnet.public.id
+  vpc_security_group_ids      = [aws_security_group.ssh_sg.id]
+  associate_public_ip_address = true
+
+  tags = {
+    Name = "terraform-ec2-vpc-demo"
   }
 }
 
