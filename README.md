@@ -1,23 +1,28 @@
 # Terraform AWS Learning
 
-This repository contains my hands-on learning projects using Terraform with AWS.
+This repository contains my hands-on Terraform projects using AWS.
 
-## Project 1: Terraform Basics
-- Configured AWS provider using Terraform
-- Used variables and outputs
-- Created and destroyed an S3 bucket
-- Followed full Terraform lifecycle (init, plan, apply, destroy)
+## Project: VPC with EC2
 
-## Project 2: EC2 with Security Group
-- Provisioned EC2 instance using Terraform
-- Created and attached Security Group allowing SSH
-- Used variables.tf and terraform.tfvars
-- Used outputs to display EC2 instance ID and public IP
-- Verified resources via AWS Console
-- Cleaned up infrastructure using terraform destroy
+This project provisions a complete AWS infrastructure using Terraform.
 
-## Tools Used
+### Resources created
+- Custom VPC
+- Public Subnet
+- Internet Gateway
+- Route Table and association
+- Security Group allowing SSH
+- EC2 instance inside the VPC
+
+### Terraform concepts used
+- Providers
+- Resources
+- Variables and tfvars
+- Outputs
+- Resource dependencies
+- Full lifecycle (init, plan, apply, destroy)
+
+### Tools
 - Terraform
 - AWS
 - AWS CLI
-
