@@ -1,28 +1,28 @@
-# Terraform AWS Learning
+# Terraform AWS Infrastructure Project
 
-This repository contains my hands-on Terraform projects using AWS.
+This repository demonstrates hands-on experience in provisioning AWS infrastructure using Terraform.
 
-## Project: VPC with EC2
+## Overview
+The project automates the creation of AWS infrastructure following real-world best practices.
 
-This project provisions a complete AWS infrastructure using Terraform.
-
-### Resources created
+## Architecture
 - Custom VPC
 - Public Subnet
 - Internet Gateway
-- Route Table and association
-- Security Group allowing SSH
+- Route Table with internet access
+- Security Group for SSH access
 - EC2 instance inside the VPC
 
-### Terraform concepts used
+## Terraform Concepts Used
 - Providers
 - Resources
 - Variables and tfvars
 - Outputs
 - Resource dependencies
-- Full lifecycle (init, plan, apply, destroy)
+- Multi-environment setup (Dev / QA)
+- Full Terraform lifecycle (plan, apply, destroy)
 
-### Tools
+## Tools
 - Terraform
 - AWS
 - AWS CLI
